@@ -1,8 +1,6 @@
 // get the express module
 const express = require('express');
 
-const path = require('path');
-
 // instantiates the module
 const app = express();
 const PORT = process.env.PORT || 3001;
