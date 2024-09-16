@@ -1,12 +1,12 @@
 # Web322 Assignment
 
-Student Name:  
-Student Number:  
-Student Email:  
-Date Created:  
+Student Name:  Seung Hoon Han
+Student Number:  108302233
+Student Email:  shhan11@myseneca.ca
+Date Created:  2024/09/16
 
-GITHUB URL:  
-VERCEL URL:   
+GITHUB URL: https://github.com/DestinHan/web322_assignment.git
+VERCEL URL: https://web322-assignment-jet.vercel.app/
 
 ### Technology Stack
 
