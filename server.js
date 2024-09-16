@@ -1,13 +1,17 @@
-// get the express module
+// Get the express module
 const express = require('express');
 
-// instantiates the module
+// Instantiates the module
 const app = express();
-const PORT = process.env.PORT || 3001;
+
+// Server port
+const HTTP_PORT = process.env.PORT || 3001;
 
 app.get('/', (req, res) => {
     res.send('Seung Hoon Han - 108302233');
 });
 
-// start the server
-app.listen(HTTP_PORT, () => console.log(`server listening on http://localhost:${HTTP_PORT}`))
+// Start the server
+app.listen(HTTP_PORT, () => {
+    console.log(`Server listening on http://localhost:${HTTP_PORT}`);
+});
