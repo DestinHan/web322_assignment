@@ -1,17 +1,21 @@
-// Get the express module
+// get the express module
 const express = require('express');
 
-// Instantiates the module
+const path = require('path');
+
+// instantiates the module
 const app = express();
 
-// Server port
-const HTTP_PORT = process.env.PORT || 3001;
+// server port
+const HTTP_PORT =  3000;
 
-app.get('/', (req, res) => {
-    res.send('Seung Hoon Han - 108302233');
+// index GET Route
+app.get('/',(req,res) =>
+{
+    console.log("Received a GET");
+
+    res.sendFile(path.join(__dirname, '/views/index.html'));
 });
 
-// Start the server
-app.listen(HTTP_PORT, () => {
-    console.log(`Server listening on http://localhost:${HTTP_PORT}`);
-});
+// start the server
+app.listen(HTTP_PORT, () => console.log(`server listening on http://localhost:${HTTP_PORT}`))
