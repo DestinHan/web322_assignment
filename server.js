@@ -12,13 +12,11 @@ const HTTP_PORT =  1004;
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    console.log("Redirecting to /about");
     res.redirect('/about');
 });
 
 app.get('/about', (req, res) => {
-    console.log("Serving about.html");
-    res.sendFile(path.join(__dirname, '/views/about.html'));
+    res.sendFile(path.join(__dirname, 'views', 'about.html'));
 });
 
 // start the server
