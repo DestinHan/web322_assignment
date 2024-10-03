@@ -7,14 +7,18 @@ const path = require('path');
 const app = express();
 
 // server port
-const HTTP_PORT =  3000;
+const HTTP_PORT =  1004;
 
-// index GET Route
-app.get('/',(req,res) =>
-{
-    console.log("Received a GET");
+app.use(express.static('public'));
 
-    res.sendFile(path.join(__dirname, '/views/index.html'));
+app.get('/', (req, res) => {
+    console.log("Redirecting to /about");
+    res.redirect('/about');
+});
+
+app.get('/about', (req, res) => {
+    console.log("Serving about.html");
+    res.sendFile(path.join(__dirname, '/views/about.html'));
 });
 
 // start the server
