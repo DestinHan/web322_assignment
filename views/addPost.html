@@ -46,17 +46,41 @@
                 <a class="nav-link" href="/categories">Categories</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/posts/add">Add Post</a>
+                <a class="nav-link active" href="/posts/add">Add Post</a>
               </li>
             </ul>
           </div>
         </div>
       </nav>
 
-      <section class="container mt-5"></section>
-        <h2>About the Blog</h2>
-        <p>Hi guys, My name is Seung Hoon Han, my email address is : shhna11@myseneca.ca and student number is 108302233.</p>
-        <p>This blog is about Programming and AI.</p>
+      <section class="container mt-5">
+        <h3>Add a New Post</h3>
+        <form action="/posts/add" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="title" class="form-label">Post Title</label>
+                <input type="text" id="title" name="title" class="form-control" placeholder="Enter the title here" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="body" class="form-label">Post Content</label>
+                <textarea id="body" name="body" class="form-control" rows="4" placeholder="Write your content here" required></textarea>
+            </div>
+            
+            <div class="mb-3">
+                <label for="featureImage" class="form-label">Choose an Image</label>
+                <input type="file" id="featureImage" name="featureImage" class="form-control" accept="image/*">
+            </div>
+            
+            <div class="form-check mb-3">
+                <input type="checkbox" id="published" name="published" class="form-check-input">
+                <label for="published" class="form-check-label">Publish Now</label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Submit Post</button>
+        </form>
+    </section>
+    
+    
     </section>
     
     <footer class="bg-light text-center py-4">
