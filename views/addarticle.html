@@ -46,23 +46,23 @@
                 <a class="nav-link" href="/categories">Categories</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="/posts/add">Add Post</a>
-              </li>
+                <a class="nav-link active" href="/articles/add">Add Article</a>
+            </li>
             </ul>
           </div>
         </div>
       </nav>
 
       <section class="container mt-5">
-        <h3>Add a New Post</h3>
-        <form action="/posts/add" method="post" enctype="multipart/form-data">
+        <h3>Add a New Article</h3>
+        <form action="/articles/add" method="post" enctype="multipart/form-data">
             <div class="mb-3">
-                <label for="title" class="form-label">Post Title</label>
+                <label for="title" class="form-label">Article Title</label>
                 <input type="text" id="title" name="title" class="form-control" placeholder="Enter the title here" required>
             </div>
             
             <div class="mb-3">
-                <label for="body" class="form-label">Post Content</label>
+                <label for="body" class="form-label">Article Content</label>
                 <textarea id="body" name="body" class="form-control" rows="4" placeholder="Write your content here" required></textarea>
             </div>
             
@@ -76,7 +76,7 @@
                 <label for="published" class="form-check-label">Publish Now</label>
             </div>
             
-            <button type="submit" class="btn btn-primary">Submit Post</button>
+            <button type="submit" class="btn btn-primary">Submit Article</button>
         </form>
     </section>
     

@@ -49,47 +49,42 @@ contentService.initialize().then(() => {
         .catch((err) => res.json({ message: err }));
     }); // Route to get all categories, also handling errors.
 
-    app.get('/posts/add', (req, res) => {
-        res.sendFile(path.join(__dirname, 'views', 'addPost.html'));
+    app.get('/articles/add', (req, res) => {
+        res.sendFile(path.join(__dirname, 'views', 'addArticle.html'));
     });
 
-    app.post('/posts/add', upload.single("featureImage"), (req, res) => {
-        if (req.file) {
-            let streamUpload = (req) => {
-                return new Promise((resolve, reject) => {
-                    let stream = cloudinary.uploader.upload_stream((error, result) => {
-                        if (result) {
-                            resolve(result);
-                        } else {
-                            reject(error);
-                        }
-                    });
-                    streamifier.createReadStream(req.file.buffer).pipe(stream);
+    app.post('/articles/add', upload.single("featureImage"), (req, res) => {
+    if (req.file) {
+        let streamUpload = (req) => {
+            return new Promise((resolve, reject) => {
+                let stream = cloudinary.uploader.upload_stream((error, result) => {
+                    if (result) resolve(result);
+                    else reject(error);
                 });
-            };
-    
-            async function upload(req) {
-                let result = await streamUpload(req);
-                return result;
-            }
-    
-            upload(req).then((uploaded) => {
-                processPost(uploaded.url);
+                streamifier.createReadStream(req.file.buffer).pipe(stream);
             });
-        } else {
-            processPost("");
+        };
+
+        async function upload(req) {
+            let result = await streamUpload(req);
+            return result;
         }
-    
-        function processPost(imageUrl) {
-            req.body.featureImage = imageUrl; 
-    
-            contentService.addPost(req.body).then(() => {
-                res.redirect('/posts'); 
-            }).catch((err) => {
-                res.status(500).json({ message: err });
-            });
-        }
-    });
+
+        upload(req).then((uploaded) => {
+            processArticle(uploaded.url);
+        }).catch(err => res.status(500).json({ message: "Image upload failed", error: err }));
+    } else {
+        processArticle("");
+    }
+
+    function processArticle(imageUrl) {
+        req.body.featureImage = imageUrl;
+        contentService.addArticle(req.body)
+            .then(() => res.redirect('/articles'))
+            .catch(err => res.status(500).json({ message: "Article creation failed", error: err }));
+    }
+});
+
 
     app.get('/post/:id', (req, res) => {
         contentService.getPostById(req.params.id).then((post) => {
