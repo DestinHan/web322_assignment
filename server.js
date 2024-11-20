@@ -2,7 +2,7 @@
 // Student Number:  108302233
 // Student Email:  shhan11@myseneca.ca
 // Date Created:  2024/10/03
-// Last Modified: 2024/10/04
+// Last Modified: 2024/11/13
 
 const express = require('express');
 const contentService = require('./content-service');
@@ -11,7 +11,7 @@ const path = require('path');
 const multer = require("multer");
 const cloudinary = require('cloudinary').v2;
 const streamifier = require('streamifier');
-const PORT = 1004; 
+const PORT = 1004;
 
 cloudinary.config({
     cloud_name: 'damszhuew',
@@ -23,82 +23,128 @@ cloudinary.config({
 const upload = multer();
 
 app.use(express.json());
-app.use(express.static('public'));  // Setting to serve static files from the "public" directory.
+app.use(express.static('public'));
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res) => {
     res.redirect('/about');
-}); // Redirecto the root URL to "/about" page.
+});
 
 app.get('/about', (req, res) => {
     res.sendFile(__dirname + '/views/about.html');
-}); // Serving "about.html" when "/about" has accessed.
+});
 
 contentService.initialize().then(() => {
+    console.log('Content service initialized successfully.');
 
-  console.log('Content service initialized successfully.'); // This is just for me to check if it works
-
+    
     app.get('/articles', (req, res) => {
+        const { category } = req.query;
         contentService.getPublishedArticles()
-        .then((data) => res.json(data))
-        .catch((err) => res.json({ message: err }));
-    }); // Send the list of published aritcles, also handling errors.
+            .then((articles) => {
+                let filteredArticles = articles;
+    
+                if (category) {
+                    filteredArticles = articles.filter(article => article.category === category);
+                }
+    
+                // 카테고리 이름 추가
+                filteredArticles = filteredArticles.map(article => {
+                    const categoryName = contentService.getCategoryNameById(article.category);
+                    console.log(`Article: ${article.title}, Category Name: ${categoryName}`); // 디버깅 출력
+                    return {
+                        ...article,
+                        categoryName: categoryName
+                    };
+                });
+    
+                res.render('articles', {
+                    articles: filteredArticles,
+                    error: filteredArticles.length === 0 ? "No articles found for the selected category." : null
+                });
+            })
+            .catch((err) => {
+                res.render('articles', { articles: [], error: "Failed to load articles." });
+            });
+    });
+    
 
     app.get('/categories', (req, res) => {
         contentService.getCategories()
-        .then((data) => res.json(data))
-        .catch((err) => res.json({ message: err }));
-    }); // Route to get all categories, also handling errors.
+            .then((categories) => {
+                res.render('categories', {
+                    categories,
+                    error: categories.length === 0 ? "No categories available." : null
+                });
+            })
+            .catch((err) => {
+                res.render('categories', { categories: [], error: "Failed to load categories." });
+            });
+    });
 
     app.get('/articles/add', (req, res) => {
         res.sendFile(path.join(__dirname, 'views', 'addArticle.html'));
     });
 
     app.post('/articles/add', upload.single("featureImage"), (req, res) => {
-    if (req.file) {
-        let streamUpload = (req) => {
-            return new Promise((resolve, reject) => {
-                let stream = cloudinary.uploader.upload_stream((error, result) => {
-                    if (result) resolve(result);
-                    else reject(error);
+        if (req.file) {
+            let streamUpload = (req) => {
+                return new Promise((resolve, reject) => {
+                    let stream = cloudinary.uploader.upload_stream((error, result) => {
+                        if (result) resolve(result);
+                        else reject(error);
+                    });
+                    streamifier.createReadStream(req.file.buffer).pipe(stream);
                 });
-                streamifier.createReadStream(req.file.buffer).pipe(stream);
-            });
-        };
+            };
 
-        async function upload(req) {
-            let result = await streamUpload(req);
-            return result;
+            async function upload(req) {
+                let result = await streamUpload(req);
+                return result;
+            }
+
+            upload(req).then((uploaded) => {
+                processArticle(uploaded.url);
+            }).catch(err => res.status(500).json({ message: "Image upload failed", error: err }));
+        } else {
+            processArticle("");
         }
 
-        upload(req).then((uploaded) => {
-            processArticle(uploaded.url);
-        }).catch(err => res.status(500).json({ message: "Image upload failed", error: err }));
-    } else {
-        processArticle("");
-    }
-
-    function processArticle(imageUrl) {
-        req.body.featureImage = imageUrl;
-        contentService.addArticle(req.body)
-            .then(() => res.redirect('/articles'))
-            .catch(err => res.status(500).json({ message: "Article creation failed", error: err }));
-    }
-});
-
+        function processArticle(imageUrl) {
+            req.body.featureImage = imageUrl;
+            contentService.addArticle(req.body)
+                .then(() => res.redirect('/articles'))
+                .catch(err => res.status(500).json({ message: "Article creation failed", error: err }));
+        }
+    });
 
     app.get('/post/:id', (req, res) => {
-        contentService.getPostById(req.params.id).then((post) => {
-            res.json(post);
-        }).catch((err) => {
-            res.status(404).json({ message: err });
-        });
+        const articleId = req.params.id;
+    
+        contentService.getArticleById(articleId)
+            .then((article) => {
+                if (!article.published) {
+                    res.status(404).render('404', { message: "This article is not published." });
+                } else {
+                    
+                    article.categoryName = contentService.getCategoryNameById(article.category);
+    
+                    res.render('article', { article });
+                }
+            })
+            .catch((err) => {
+                res.status(404).render('404', { message: "Article not found." });
+            });
     });
     
-    
+
 }).catch(err => {
-    console.log("Failed to initialize: " + err);    // If there's an issue, log the error.
+    console.log("Failed to initialize: " + err);
 });
 
+// Start the server
 app.listen(PORT, () => {
     console.log(`Express http server listening on port ${PORT}`);
-}); // Starting the server.
+});
