@@ -1,0 +1,18 @@
+[
+    
+{
+    "id" : 1,
+    "title" : "Learn AI-Assisted Python Programming",
+    "content" : "AI helps students skip right to the good stuff in this intro programming course",
+    "published" : true,
+    "category" : "AI"
+},
+{
+    "id" : 2,
+    "title" : "Why elementary and high school students should learn computer programming",
+    "content" : "Meeting the growing needs of the job market ...",
+    "published" : true,
+    "category" : "Programming"
+}
+
+]

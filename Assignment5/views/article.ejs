@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">
+    <title><%= article.title %></title>
+</head>
+<body>
+    <h1><%= article.title %></h1>
+    <p><strong>Category:</strong> <%= article.categoryName %></p>
+    <% if (article.featureImage) { %>
+        <img src="<%= article.featureImage %>" alt="<%= article.title %>">
+    <% } %>
+    <p><%= article.content %></p>
+</body>
+</html>

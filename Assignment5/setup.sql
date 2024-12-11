@@ -17,7 +17,7 @@ INSERT INTO categories (name) VALUES
 ('Programming');
 
 INSERT INTO articles (title, content, published, category) VALUES
-('Learn AI-Assisted Python Programming', 'AI helps students study...', true, 'AI'),
+('Learn AI-Assisted Python Programming', 'AI helps students skip...', true, 'AI'),
 ('Why elementary and high school students should learn computer programming', 'Meeting the growing needs...', true, 'Programming');
 
 

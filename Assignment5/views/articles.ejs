@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">
+    <title>Articles</title>
+</head>
+<body>
+    <h1>Articles</h1>
+
+    <% if (error) { %>
+        <p class="error-message"><%= error %></p>
+    <% } else { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% articles.forEach(article => { %>
+                    <tr>
+                        <td><a href="/articles/<%= article.id %>"><%= article.title %></a></td>
+                        <td><a href="/articles?category=<%= article.category %>"><%= article.category %></a></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } %>
+</body>
+</html>
